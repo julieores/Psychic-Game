@@ -1,26 +1,119 @@
-    <!Doctype html>
-    <html lang="en-us">
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Psychic Game</title>
+</head>
+
+<!-- Name variables (any letter), Create random letter, Create keyup action, When keyup and equals random letter, 
+     add one to Wins, When keyup action is not equal to random letter, add one to losses, when keyup is equal to nine 
+    length is 9 keyups, reset to zero, repeat loop -->
+
+<body>
+  <div id="guesses-left"></div>
+  <div>Previously Guessed Letters:
+    <span id="prev-guessed-letters"></span>
+  </div>
+  <div id="wins"></div>
+  <div id="losses"></div>
+
+
+  <script>
+    var guessesLeft;
+
+    var letterBank = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
+      "t", "u", "v", "w", "x", "y", "z"]
     
-    <head>
-      <meta charset="UTF-8">
-      <title>Psychic Game</title>
-      <link rel="stylesheet" type="text/css" href="assets/css/game.css">
-   
-    
-      <!-- Bootstrap CSS -->
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    
-    </head>
+    var hiddenLetter;
 
-    
- 
+    var previouslyGuessedLetters;
 
-  <body>
-   
-   <script src="game.js"></script>
+
+    var wins = 0;
+    var losses = 0;
 
 
 
-  </body>
+    // function updateGuesses(){
+    //     document.getElementById('guesses-left').textContent = "Guesses Left " + guessesLeft;
+    // }
+
+    function updateDocument() {
+      document.getElementById('prev-guessed-letters').textContent = previouslyGuessedLetters.join(" ");
+      document.getElementById("wins").textContent = "Wins: " + wins;
+      document.getElementById("losses").textContent = "Losses: " + losses;
+      document.getElementById('guesses-left').textContent = "Guesses Left " + guessesLeft;
+    }
+
+
+    function startGame() {
+      guessesLeft = 9;
+      previouslyGuessedLetters = [];
+
+      hiddenLetter = letterBank[Math.floor(Math.random() * letterBank.length)];
+
+      console.log("This is our hidden letter that the user is going to try to guess: ", hiddenLetter);
+      // updateGuesses();
+
+      updateDocument()
+    }
+
+    startGame();
+
+
+    document.onkeyup = function (event) {
+      // console.log(event);
+      var userGuess = event.key;
+
+      console.log("This is our user guess: " + userGuess);
+
+      if (userGuess === hiddenLetter) {
+        wins++;
+
+        updateDocument();
+        startGame();
+      } else {
+
+        if (duplicateChecker(userGuess)) {
+          alert("you already guessed: " + userGuess)
+          updateDocument();
+        } else {
+          guessesLeft--;
+
+          if (guessesLeft > 0) {
+            previouslyGuessedLetters.push(userGuess);
+            updateDocument();
+          } else {
+            losses++;
+            updateDocument();
+            startGame();
+          }
+        }
+
+      }
+
+    }
+
+    function duplicateChecker(letter) {
+      for (var i = 0; i < previouslyGuessedLetters.length; i++) {
+
+        console.log("Previously Guessed Letter at index " + i + " is: " + previouslyGuessedLetters[i])
+
+        if (letter == previouslyGuessedLetters[i]) {
+          console.log("you already guessed: " + previouslyGuessedLetters[i])
+
+          return true;
+
+        }
+      }
+
+      return false;
+
+    }
+  </script>
+</body>
+
 </html>
-
